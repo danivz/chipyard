@@ -10,6 +10,7 @@ import freechips.rocketchip.diplomacy.{DTSModel, DTSTimebase, RegionType, Addres
 import freechips.rocketchip.tile.{XLen}
 
 import sifive.blocks.devices.uart.{PeripheryUARTKey, UARTParams}
+import sifive.blocks.devices.i2c.{PeripheryI2CKey, I2CParams}
 
 import sifive.fpgashells.shell.{DesignKey}
 // import sifive.fpgashells.shell.xilinx.{VC7094GDDRSize}
@@ -20,6 +21,7 @@ import chipyard.{BuildSystem, ExtTLMem, DefaultClockFrequencyKey}
 
 class WithDefaultPeripherals extends Config((site, here, up) => {
   case PeripheryUARTKey => List(UARTParams(address = BigInt(0x64000000L)))
+  case PeripheryI2CKey => List(I2CParams(address = BigInt(0x64001000L)))
 })
 
 class WithSystemModifications extends Config((site, here, up) => {
@@ -31,10 +33,12 @@ class WithSystemModifications extends Config((site, here, up) => {
 class WithVC709Tweaks extends Config (
   // harness binders
   new WithVC709UARTHarnessBinder ++
+  new WithVC709PMBusHarnessBinder ++
   new WithJTAGDebugBScan ++
   // new WithVC709DDRMemHarnessBinder ++
   // io binders
   new WithUARTIOPassthrough ++
+  new WithPMBusIOPassthrough ++
   // new WithTLIOPassthrough ++
   // other configuration
   new WithDefaultPeripherals ++
@@ -49,6 +53,7 @@ class WithVC709Tweaks extends Config (
 class TinyRocketVC709Config extends Config(
   new WithVC709Tweaks ++
   new freechips.rocketchip.subsystem.WithNBreakpoints(2) ++
+  new freechips.rocketchip.subsystem.WithL1DCacheSets(1024) ++ // increase L1D$ size to 64KiB
   new chipyard.TinyRocketConfig
 )
 

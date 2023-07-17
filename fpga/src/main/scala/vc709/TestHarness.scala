@@ -9,10 +9,11 @@ import freechips.rocketchip.tilelink.{TLClientNode}
 
 import sifive.fpgashells.shell.xilinx.{VC709Shell, UARTVC709ShellPlacer}
 import sifive.fpgashells.ip.xilinx.{IBUF, PowerOnResetFPGAOnly}
-import sifive.fpgashells.shell.{ClockInputOverlayKey, ClockInputDesignInput, UARTOverlayKey, UARTDesignInput, UARTShellInput, LEDOverlayKey, LEDDesignInput, SwitchOverlayKey, SwitchDesignInput, ButtonOverlayKey, ButtonDesignInput, PCIeOverlayKey, PCIeDesignInput, PCIeShellInput, DDROverlayKey, DDRDesignInput, JTAGDebugBScanOverlayKey, JTAGDebugBScanDesignInput}
+import sifive.fpgashells.shell.{ClockInputOverlayKey, ClockInputDesignInput, UARTOverlayKey, UARTDesignInput, UARTShellInput, LEDOverlayKey, LEDDesignInput, SwitchOverlayKey, SwitchDesignInput, ButtonOverlayKey, ButtonDesignInput, PCIeOverlayKey, PCIeDesignInput, PCIeShellInput, DDROverlayKey, DDRDesignInput, I2COverlayKey, I2CDesignInput, JTAGDebugBScanOverlayKey, JTAGDebugBScanDesignInput}
 import sifive.fpgashells.clocks.{ClockGroup, ClockSinkNode, PLLFactoryKey, ResetWrangler}
 
 import sifive.blocks.devices.uart.{PeripheryUARTKey, UARTPortIO}
+import sifive.blocks.devices.i2c.{PeripheryI2CKey, I2CPort}
 
 import chipyard.{HasHarnessSignalReferences, BuildTop, ChipTop, ExtTLMem, CanHaveMasterTLMemPort, DefaultClockFrequencyKey}
 import chipyard.iobinders.{HasIOBinders}
@@ -52,6 +53,10 @@ class VC709FPGATestHarness(override implicit val p: Parameters) extends VC709She
 
   // /*** Button ***/
   // val buttonModule = dp(ButtonOverlayKey).map(_.place(ButtonDesignInput()).overlayOutput.but)
+
+  /*** PMBus ***/
+  val io_pmbus_bb = BundleBridgeSource(() => (new I2CPort))
+  dp(I2COverlayKey).head.place(I2CDesignInput(io_pmbus_bb))
 
   /*** JTAG ***/
   val jtagModule = dp(JTAGDebugBScanOverlayKey).head.place(JTAGDebugBScanDesignInput()).overlayOutput.jtag
