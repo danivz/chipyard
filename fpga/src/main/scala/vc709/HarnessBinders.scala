@@ -12,7 +12,7 @@ import freechips.rocketchip.tilelink.{TLBundle}
 import sifive.blocks.devices.uart.{HasPeripheryUARTModuleImp, UARTPortIO}
 import sifive.blocks.devices.i2c.{HasPeripheryI2CModuleImp, I2CPort}
 
-import chipyard.{CanHaveMasterTLMemPort, HasHarnessSignalReferences}
+import chipyard.{CanHaveMasterTLMemPort}
 import chipyard.harness.{OverrideHarnessBinder}
 import chipyard.iobinders.JTAGChipIO
 
@@ -34,26 +34,26 @@ class WithVC709PMBusHarnessBinder extends OverrideHarnessBinder({
   }
 })
 
-// /*** Experimental DDR ***/
-// class WithVC709DDRMemHarnessBinder extends OverrideHarnessBinder({
-//   (system: CanHaveMasterTLMemPort, th: BaseModule, ports: Seq[HeterogeneousBag[TLBundle]]) => {
-//     th match { case vc709th: VC709FPGATestHarnessImp => {
-//       require(ports.size == 1)
+/*** Experimental DDR ***/
+class WithVC709DDRMemHarnessBinder extends OverrideHarnessBinder({
+  (system: CanHaveMasterTLMemPort, th: BaseModule, ports: Seq[HeterogeneousBag[TLBundle]]) => {
+    th match { case vc709th: VC709FPGATestHarnessImp => {
+      require(ports.size == 1)
 
-//       val bundles = vc709th.vc709Outer.ddrClient.out.map(_._1)
-//       val ddrClientBundle = Wire(new HeterogeneousBag(bundles.map(_.cloneType)))
-//       bundles.zip(ddrClientBundle).foreach { case (bundle, io) => bundle <> io }
-//       ddrClientBundle <> ports.head
-//     }}
-//   }
-// })
+      val bundles = vc709th.vc709Outer.ddrClient.out.map(_._1)
+      val ddrClientBundle = Wire(new HeterogeneousBag(bundles.map(_.cloneType)))
+      bundles.zip(ddrClientBundle).foreach { case (bundle, io) => bundle <> io }
+      ddrClientBundle <> ports.head
+    }}
+  }
+})
 
 /*** JTAG BScan ***/
 class WithJTAGDebugBScan extends OverrideHarnessBinder({
-  (system: HasPeripheryDebug, th: BaseModule with HasHarnessSignalReferences, ports: Seq[Data]) => {
+  (system: HasPeripheryDebug, th: BaseModule, ports: Seq[Data]) => {
     th match { case vc709th: VC709FPGATestHarnessImp => {
       ports.map {
-        case j: JTAGChipIO => withClockAndReset(th.buildtopClock, th.buildtopReset) {
+        case j: JTAGChipIO => {
           val jtag_tmp = vc709th.vc709Outer.jtagModule
           jtag_tmp.TDO.data := j.TDO
           jtag_tmp.TDO.driven := true.B

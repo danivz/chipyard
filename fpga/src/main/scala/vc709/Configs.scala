@@ -13,11 +13,12 @@ import sifive.blocks.devices.uart.{PeripheryUARTKey, UARTParams}
 import sifive.blocks.devices.i2c.{PeripheryI2CKey, I2CParams}
 
 import sifive.fpgashells.shell.{DesignKey}
-// import sifive.fpgashells.shell.xilinx.{VC7094GDDRSize}
+import sifive.fpgashells.shell.xilinx.{VC7094GDDRSize}
 
 import testchipip.{SerialTLKey}
 
-import chipyard.{BuildSystem, ExtTLMem, DefaultClockFrequencyKey}
+import chipyard.{BuildSystem, ExtTLMem}
+import chipyard.harness._
 
 class WithDefaultPeripherals extends Config((site, here, up) => {
   case PeripheryUARTKey => List(UARTParams(address = BigInt(0x64000000L)))
@@ -26,28 +27,36 @@ class WithDefaultPeripherals extends Config((site, here, up) => {
 
 class WithSystemModifications extends Config((site, here, up) => {
   case DTSTimebase => BigInt{(1e6).toLong}
-  // case ExtMem => up(ExtMem, site).map(x => x.copy(master = x.master.copy(size = site(VC7094GDDRSize)))) // set extmem to DDR size (note the size)
+  case ExtMem => up(ExtMem, site).map(x => x.copy(master = x.master.copy(size = site(VC7094GDDRSize)))) // set extmem to DDR size (note the size)
   case SerialTLKey => None // remove serialized tl port
 })
 
 class WithVC709Tweaks extends Config (
+  // clocking
+  new chipyard.harness.WithAllClocksFromHarnessClockInstantiator ++
+  new chipyard.clocking.WithPassthroughClockGenerator ++
+  new chipyard.config.WithMemoryBusFrequency(50.0) ++
+  new chipyard.config.WithSystemBusFrequency(50.0) ++
+  new chipyard.config.WithPeripheryBusFrequency(50.0) ++
+  new chipyard.harness.WithHarnessBinderClockFreqMHz(50) ++
+  new WithFPGAFrequency(50) ++ // default 50MHz freq
   // harness binders
+  new chipyard.harness.WithAllClocksFromHarnessClockInstantiator ++
   new WithVC709UARTHarnessBinder ++
   new WithVC709PMBusHarnessBinder ++
   new WithJTAGDebugBScan ++
-  // new WithVC709DDRMemHarnessBinder ++
+  new WithVC709DDRMemHarnessBinder ++
   // io binders
   new WithUARTIOPassthrough ++
   new WithPMBusIOPassthrough ++
-  // new WithTLIOPassthrough ++
+  new WithTLIOPassthrough ++
   // other configuration
   new WithDefaultPeripherals ++
-  // new chipyard.config.WithTLBackingMemory ++ // use TL backing memory
+  new chipyard.config.WithTLBackingMemory ++ // use TL backing memory
   new WithSystemModifications ++ // setup busses, use sdboot bootrom, setup ext. mem. size
   // new chipyard.config.WithNoDebug ++ // remove debug module
-  // new freechips.rocketchip.subsystem.WithoutTLMonitors ++
-  // new freechips.rocketchip.subsystem.WithNMemoryChannels(1) ++
-  new WithFPGAFrequency(50) // default 50MHz freq
+  new freechips.rocketchip.subsystem.WithoutTLMonitors ++
+  new freechips.rocketchip.subsystem.WithNMemoryChannels(1)
 )
 
 class TinyRocketVC709Config extends Config(
