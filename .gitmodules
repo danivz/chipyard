@@ -133,3 +133,6 @@
 [submodule "generators/powermonitor"]
 	path = generators/powermonitor
 	url = https://github.com/danivz/powermonitor.git
+[submodule "generators/overlay"]
+	path = generators/overlay
+	url = git@github.com:danivz/overlay.git

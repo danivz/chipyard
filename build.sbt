@@ -153,7 +153,8 @@ lazy val chipyard = (project in file("generators/chipyard"))
     sha3, // On separate line to allow for cleaner tutorial-setup patches
     dsptools, `rocket-dsp-utils`,
     gemmini, icenet, tracegen, cva6, nvdla, sodor, ibex, fft_generator,
-    powermonitor, constellation, mempress, barf, shuttle)
+    powermonitor, constellation, mempress, barf, shuttle
+    overlay, constellation, mempress, barf, shuttle)
   .settings(libraryDependencies ++= rocketLibDeps.value)
   .settings(
     libraryDependencies ++= Seq(
@@ -290,6 +291,11 @@ lazy val sifive_cache = (project in file("generators/sifive-cache"))
 // External projects
 lazy val powermonitor = (project in file("generators/powermonitor"))
   .dependsOn(rocketchip, sifive_blocks)
+  .settings(libraryDependencies ++= rocketLibDeps.value)
+  .settings(commonSettings)
+
+lazy val overlay = (project in file("generators/overlay"))
+  .dependsOn(rocketchip)
   .settings(libraryDependencies ++= rocketLibDeps.value)
   .settings(commonSettings)
 
