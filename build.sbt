@@ -289,8 +289,9 @@ lazy val sifive_cache = (project in file("generators/sifive-cache"))
 
 // External projects
 lazy val powermonitor = (project in file("generators/powermonitor"))
-  .settings(commonSettings)
   .dependsOn(rocketchip)
+  .settings(libraryDependencies ++= rocketLibDeps.value)
+  .settings(commonSettings)
 
 // Library components of FireSim
 lazy val midas      = ProjectRef(firesimDir, "midas")
