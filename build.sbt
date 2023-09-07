@@ -289,7 +289,7 @@ lazy val sifive_cache = (project in file("generators/sifive-cache"))
 
 // External projects
 lazy val powermonitor = (project in file("generators/powermonitor"))
-  .dependsOn(rocketchip)
+  .dependsOn(rocketchip, sifive_blocks)
   .settings(libraryDependencies ++= rocketLibDeps.value)
   .settings(commonSettings)
 
@@ -306,7 +306,7 @@ lazy val firechip = (project in file("generators/firechip"))
     Test / testOptions += Tests.Argument("-oF")
   )
 lazy val fpga_shells = (project in file("./fpga/fpga-shells"))
-  .dependsOn(rocketchip, sifive_blocks)
+  .dependsOn(rocketchip, sifive_blocks, powermonitor)
   .settings(libraryDependencies ++= rocketLibDeps.value)
   .settings(commonSettings)
 

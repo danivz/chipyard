@@ -5,12 +5,11 @@ import sys.process._
 import org.chipsalliance.cde.config.{Config, Parameters}
 import freechips.rocketchip.subsystem.{SystemBusKey, PeripheryBusKey, ControlBusKey, ExtMem}
 import freechips.rocketchip.devices.debug.{DebugModuleKey, ExportDebug, JTAG}
-// import freechips.rocketchip.devices.tilelink.{DevNullParams, BootROMLocated}
 import freechips.rocketchip.diplomacy.{DTSModel, DTSTimebase, RegionType, AddressSet}
 import freechips.rocketchip.tile.{XLen}
 
 import sifive.blocks.devices.uart.{PeripheryUARTKey, UARTParams}
-import sifive.blocks.devices.i2c.{PeripheryI2CKey, I2CParams}
+import powermonitor.{PeripheryPowerMonitorKey, PowerMonitorParams}
 
 import sifive.fpgashells.shell.{DesignKey}
 import sifive.fpgashells.shell.xilinx.{VC7094GDDRSize}
@@ -22,7 +21,8 @@ import chipyard.harness._
 
 class WithDefaultPeripherals extends Config((site, here, up) => {
   case PeripheryUARTKey => List(UARTParams(address = BigInt(0x64000000L)))
-  case PeripheryI2CKey => List(I2CParams(address = BigInt(0x64001000L)))
+  case PeripheryPowerMonitorKey => 
+    List(PowerMonitorParams(address = BigInt(0x64001000L), clockFreqMHz = 50, maxSamples = 2048))
 })
 
 class WithSystemModifications extends Config((site, here, up) => {

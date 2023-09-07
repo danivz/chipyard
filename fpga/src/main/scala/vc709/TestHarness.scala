@@ -15,7 +15,7 @@ import sifive.fpgashells.shell._
 import sifive.fpgashells.clocks.{ClockGroup, ClockSinkNode, PLLFactoryKey, ResetWrangler}
 
 import sifive.blocks.devices.uart.{PeripheryUARTKey, UARTPortIO}
-import sifive.blocks.devices.i2c.{PeripheryI2CKey, I2CPort}
+import powermonitor.{PMBusPort}
 
 import chipyard._
 import chipyard.iobinders.{HasIOBinders}
@@ -56,8 +56,8 @@ class VC709FPGATestHarness(override implicit val p: Parameters) extends VC709She
   val buttonModule = dp(ButtonOverlayKey).map(_.place(ButtonDesignInput()).overlayOutput.but)
 
   /*** PMBus ***/
-  val io_pmbus_bb = BundleBridgeSource(() => (new I2CPort))
-  dp(I2COverlayKey).head.place(I2CDesignInput(io_pmbus_bb))
+  val io_pmbus_bb = BundleBridgeSource(() => (new PMBusPort))
+  dp(PMBusOverlayKey).head.place(PMBusDesignInput(io_pmbus_bb))
 
   /*** JTAG ***/
   val jtagModule = dp(JTAGDebugBScanOverlayKey).head.place(JTAGDebugBScanDesignInput()).overlayOutput.jtag

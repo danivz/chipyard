@@ -9,7 +9,7 @@ import freechips.rocketchip.util.{HeterogeneousBag}
 import freechips.rocketchip.tilelink.{TLBundle}
 
 import sifive.blocks.devices.uart.{HasPeripheryUARTModuleImp}
-import sifive.blocks.devices.i2c.{HasPeripheryI2CModuleImp}
+import powermonitor.{HasPeripheryPowerMonitorModuleImp}
 
 import chipyard.{CanHaveMasterTLMemPort}
 import chipyard.iobinders.{OverrideIOBinder, OverrideLazyIOBinder}
@@ -25,12 +25,12 @@ class WithUARTIOPassthrough extends OverrideIOBinder({
 })
 
 class WithPMBusIOPassthrough extends OverrideIOBinder({
-  (system: HasPeripheryI2CModuleImp) => {
-    val io_i2c_pins_temp = system.i2c.zipWithIndex.map { case (dio, i) => IO(dio.cloneType).suggestName(s"pmbus_$i") }
-    (io_i2c_pins_temp zip system.i2c).map { case (io, sysio) =>
+  (system: HasPeripheryPowerMonitorModuleImp) => {
+    val io_pmbus_pins_temp = system.powermonitor.zipWithIndex.map { case (dio, i) => IO(dio.cloneType).suggestName(s"pmbus_$i") }
+    (io_pmbus_pins_temp zip system.powermonitor).map { case (io, sysio) =>
       io <> sysio
     }
-    (io_i2c_pins_temp, Nil)
+    (io_pmbus_pins_temp, Nil)
   }
 })
 

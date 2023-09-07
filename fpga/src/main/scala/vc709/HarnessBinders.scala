@@ -10,7 +10,7 @@ import freechips.rocketchip.util.{HeterogeneousBag}
 import freechips.rocketchip.tilelink.{TLBundle}
 
 import sifive.blocks.devices.uart.{HasPeripheryUARTModuleImp, UARTPortIO}
-import sifive.blocks.devices.i2c.{HasPeripheryI2CModuleImp, I2CPort}
+import powermonitor.{HasPeripheryPowerMonitorModuleImp, PMBusPort}
 
 import chipyard.{CanHaveMasterTLMemPort}
 import chipyard.harness.{OverrideHarnessBinder}
@@ -25,9 +25,9 @@ class WithVC709UARTHarnessBinder extends OverrideHarnessBinder({
   }
 })
 
-/*** I2C ***/
+/*** PMBus ***/
 class WithVC709PMBusHarnessBinder extends OverrideHarnessBinder({
-  (system: HasPeripheryI2CModuleImp, th: BaseModule, ports: Seq[I2CPort]) => {
+  (system: HasPeripheryPowerMonitorModuleImp, th: BaseModule, ports: Seq[PMBusPort]) => {
     th match { case vc709th: VC709FPGATestHarnessImp => {
       vc709th.vc709Outer.io_pmbus_bb.bundle <> ports.head
     }}
