@@ -22,7 +22,7 @@ import chipyard.harness._
 class WithDefaultPeripherals extends Config((site, here, up) => {
   case PeripheryUARTKey => List(UARTParams(address = BigInt(0x64000000L)))
   case PeripheryPowerMonitorKey => 
-    List(PowerMonitorParams(address = BigInt(0x64001000L), clockFreqMHz = 50, maxSamples = 2048))
+    List(PowerMonitorParams(address = BigInt(0x64001000L), clockFreqMHz = 50, maxSamples = 0x8000))
 })
 
 class WithSystemModifications extends Config((site, here, up) => {
