@@ -39,7 +39,6 @@ class WithVC709Tweaks extends Config (
   new chipyard.config.WithSystemBusFrequency(50.0) ++
   new chipyard.config.WithPeripheryBusFrequency(50.0) ++
   new chipyard.harness.WithHarnessBinderClockFreqMHz(50) ++
-  new WithFPGAFrequency(50) ++ // default 50MHz freq
   // harness binders
   new chipyard.harness.WithAllClocksFromHarnessClockInstantiator ++
   new WithVC709UARTHarnessBinder ++
@@ -69,6 +68,35 @@ class TinyRocketVC709Config extends Config(
 class RocketVC709Config extends Config (
   new WithVC709Tweaks ++
   new chipyard.RocketConfig
+)
+
+class CGRARocket64VC709Config extends Config (
+  new WithVC709Tweaks ++
+  new chipyard.config.WithSystemBusWidth(64) ++
+  new overlay.DefaultOverlayConfig ++
+  new overlay.WithOverlayRocc ++
+  new chipyard.RocketConfig
+)
+
+class CGRARocket128VC709Config extends Config (
+  new WithVC709Tweaks ++
+  new chipyard.config.WithSystemBusWidth(128) ++
+  new overlay.DefaultOverlayConfig ++
+  new overlay.WithOverlayRocc ++
+  new chipyard.RocketConfig
+)
+
+class CGRARocket256VC709Config extends Config (
+  new WithVC709Tweaks ++
+  new chipyard.config.WithSystemBusWidth(256) ++
+  new overlay.DefaultOverlayConfig ++
+  new overlay.WithOverlayRocc ++
+  new chipyard.RocketConfig
+)
+
+class HwachaRocketVC709Config extends Config(
+  new WithVC709Tweaks ++
+  new chipyard.HwachaRocketConfig
 )
 
 class BoomVC709Config extends Config (
