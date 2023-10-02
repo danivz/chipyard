@@ -70,6 +70,12 @@ class RocketVC709Config extends Config (
   new chipyard.RocketConfig
 )
 
+class Rocket128VC709Config extends Config (
+  new WithVC709Tweaks ++
+  new chipyard.config.WithSystemBusWidth(128) ++
+  new chipyard.RocketConfig
+)
+
 class CGRARocket64VC709Config extends Config (
   new WithVC709Tweaks ++
   new chipyard.config.WithSystemBusWidth(64) ++
