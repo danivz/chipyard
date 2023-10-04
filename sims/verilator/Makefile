@@ -86,7 +86,7 @@ HELP_COMPILATION_VARIABLES += \
 "   VERILATOR_PROFILE      = 'none' if no verilator profiling (default)" \
 "                            'all' if full verilator runtime profiling" \
 "                            'threads' if runtime thread profiling only" \
-"   VERILATOR_THREADS      = how many threads the simulator will use (default 1)" \
+"   VERILATOR_THREADS      = how many threads the simulator will use (default 16)" \
 "   VERILATOR_FST_MODE     = enable FST waveform instead of VCD. use with debug build"
 
 #########################################################################################
@@ -104,7 +104,7 @@ RUNTIME_PROFILING_VFLAGS := $(if $(filter $(VERILATOR_PROFILE),all),\
                               $(if $(filter $(VERILATOR_PROFILE),threads),\
 								--prof-threads,))
 
-VERILATOR_THREADS ?= 1
+VERILATOR_THREADS ?= 16
 RUNTIME_THREADS := --threads $(VERILATOR_THREADS) --threads-dpi all
 
 VERILATOR_FST_MODE ?= 0

@@ -6,6 +6,11 @@ import freechips.rocketchip.diplomacy.{AsynchronousCrossing}
 // --------------
 // Rocket Configs
 // --------------
+class CGRARocketConfig extends Config(
+  new overlay.DefaultOverlayConfig ++
+  new overlay.WithOverlayRocc ++
+  new freechips.rocketchip.subsystem.WithNBigCores(1) ++         // single rocket-core
+  new chipyard.config.AbstractConfig)
 
 class RocketConfig extends Config(
   new freechips.rocketchip.subsystem.WithNBigCores(1) ++         // single rocket-core
