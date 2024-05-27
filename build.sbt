@@ -154,7 +154,7 @@ lazy val chipyard = (project in file("generators/chipyard"))
     dsptools, `rocket-dsp-utils`,
     gemmini, icenet, tracegen, cva6, nvdla, sodor, ibex, fft_generator,
     powermonitor, constellation, mempress, barf, shuttle,
-    overlay, constellation, mempress, barf, shuttle)
+    overlay, constellation, mempress, barf, shuttle, xilinxips)
   .settings(libraryDependencies ++= rocketLibDeps.value)
   .settings(
     libraryDependencies ++= Seq(
@@ -296,6 +296,11 @@ lazy val powermonitor = (project in file("generators/powermonitor"))
 
 lazy val overlay = (project in file("generators/overlay"))
   .dependsOn(rocketchip)
+  .settings(libraryDependencies ++= rocketLibDeps.value)
+  .settings(commonSettings)
+
+lazy val xilinxips = (project in file("generators/xilinx-ips"))
+  .dependsOn(rocketchip, sifive_blocks)
   .settings(libraryDependencies ++= rocketLibDeps.value)
   .settings(commonSettings)
 

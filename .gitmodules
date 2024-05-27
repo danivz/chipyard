@@ -136,3 +136,6 @@
 [submodule "generators/overlay"]
 	path = generators/overlay
 	url = git@github.com:danivz/overlay.git
+[submodule "generators/xilinx-ips"]
+	path = generators/xilinx-ips
+	url = git@github.com:des-cei/xilinx-ips.git
