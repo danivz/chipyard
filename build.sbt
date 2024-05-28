@@ -300,7 +300,7 @@ lazy val overlay = (project in file("generators/overlay"))
   .settings(commonSettings)
 
 lazy val xilinxips = (project in file("generators/xilinx-ips"))
-  .dependsOn(rocketchip, sifive_blocks)
+  .dependsOn(rocketchip)
   .settings(libraryDependencies ++= rocketLibDeps.value)
   .settings(commonSettings)
 

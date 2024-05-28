@@ -70,6 +70,12 @@ class RocketVC709Config extends Config (
   new chipyard.RocketConfig
 )
 
+class HBICAPRocketVC709Config extends Config (
+  new WithVC709Tweaks ++
+  new xilinxips.hbicap.WithHBICAP(BigInt(0x64002000L), BigInt(0x7AA00000L)) ++
+  new chipyard.RocketConfig
+)
+
 class Rocket128VC709Config extends Config (
   new WithVC709Tweaks ++
   new chipyard.config.WithSystemBusWidth(128) ++

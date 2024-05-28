@@ -35,6 +35,7 @@ class DigitalTop(implicit p: Parameters) extends ChipyardSystem
   with fftgenerator.CanHavePeripheryFFT // Enables optionally having an MMIO-based FFT block
   with constellation.soc.CanHaveGlobalNoC // Support instantiating a global NoC interconnect
   with powermonitor.HasPeripheryPowerMonitor // Enables optionally adding custom PowerMonitor MMIO module
+  with xilinxips.hbicap.CanHavePeripheryHBICAP // Enables optionally adding custom HBICAP Xilinx IP
 {
   override lazy val module = new DigitalTopModule(this)
 }
