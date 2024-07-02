@@ -21,6 +21,9 @@ import chipyard.harness._
 
 class WithDefaultPeripherals extends Config((site, here, up) => {
   case PeripheryUARTKey => List(UARTParams(address = BigInt(0x64000000L)))
+})
+
+class WithPowerMonitor extends Config((site, here, up) => {
   case PeripheryPowerMonitorKey => 
     List(PowerMonitorParams(address = BigInt(0x64001000L), clockFreqMHz = 50, maxSamples = 0x8000))
 })
@@ -42,12 +45,10 @@ class WithVC709Tweaks extends Config (
   // harness binders
   new chipyard.harness.WithAllClocksFromHarnessClockInstantiator ++
   new WithVC709UARTHarnessBinder ++
-  new WithVC709PMBusHarnessBinder ++
   new WithJTAGDebugBScan ++
   new WithVC709DDRMemHarnessBinder ++
   // io binders
   new WithUARTIOPassthrough ++
-  new WithPMBusIOPassthrough ++
   new WithTLIOPassthrough ++
   // other configuration
   new WithDefaultPeripherals ++
@@ -56,6 +57,12 @@ class WithVC709Tweaks extends Config (
   // new chipyard.config.WithNoDebug ++ // remove debug module
   new freechips.rocketchip.subsystem.WithoutTLMonitors ++
   new freechips.rocketchip.subsystem.WithNMemoryChannels(1)
+)
+
+class WithVC709PMBus extends Config (
+  new WithVC709PMBusHarnessBinder ++
+  new WithPMBusIOPassthrough ++
+  new WithPowerMonitor
 )
 
 class TinyRocketVC709Config extends Config(
@@ -70,9 +77,16 @@ class RocketVC709Config extends Config (
   new chipyard.RocketConfig
 )
 
-class HBICAPRocketVC709Config extends Config (
+class PMBusRocketVC709Config extends Config (
+  new WithVC709Tweaks ++
+  new WithVC709PMBus ++
+  new chipyard.RocketConfig
+)
+
+class IMPRESSRocketVC709Config extends Config (
   new WithVC709Tweaks ++
   new xilinxips.hbicap.WithHBICAP(BigInt(0x64002000L), BigInt(0x7AA00000L)) ++
+  new xilinxips.impress.WithIMPRESSExample(BigInt(0x64005000L)) ++
   new chipyard.RocketConfig
 )
 

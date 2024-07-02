@@ -36,6 +36,7 @@ class DigitalTop(implicit p: Parameters) extends ChipyardSystem
   with constellation.soc.CanHaveGlobalNoC // Support instantiating a global NoC interconnect
   with powermonitor.HasPeripheryPowerMonitor // Enables optionally adding custom PowerMonitor MMIO module
   with xilinxips.hbicap.CanHavePeripheryHBICAP // Enables optionally adding custom HBICAP Xilinx IP
+  with xilinxips.impress.CanHavePeripheryIMPRESSExample
 {
   override lazy val module = new DigitalTopModule(this)
 }
