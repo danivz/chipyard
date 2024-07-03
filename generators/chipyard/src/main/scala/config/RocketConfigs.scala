@@ -2,6 +2,25 @@ package chipyard
 
 import org.chipsalliance.cde.config.{Config}
 import freechips.rocketchip.diplomacy.{AsynchronousCrossing}
+import overlay.{OverlayKey, OverlayParams}
+
+// --------------
+// Custom Rocket Configs
+// --------------
+
+class SimCGRAConfig extends Config((site, here, up) => {
+  case OverlayKey => OverlayParams(
+    cgraLen     = 32,
+    inputNodes  = 4,
+    outputNodes = 4
+  )
+})
+
+class SimCGRARocketConfig extends Config (
+  new SimCGRAConfig ++
+  new overlay.WithOverlayRocc ++
+  new freechips.rocketchip.subsystem.WithNBigCores(1) ++         // single rocket-core
+  new chipyard.config.AbstractConfig)
 
 // --------------
 // Rocket Configs
