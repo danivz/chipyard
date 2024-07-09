@@ -161,6 +161,20 @@ $(BIT_FILE): $(synth_list_f)
 .PHONY: bitstream
 bitstream: $(BIT_FILE)
 
+BIT_FILE_IMPRESS := $(build_dir)/obj/$(MODEL).bit
+$(BIT_FILE_IMPRESS): $(synth_list_f)
+	cd $(build_dir); vivado \
+		-nojournal -mode batch \
+		-source $(fpga_common_script_dir)/vivado-impress.tcl \
+		-tclargs \
+			-top-module "$(MODEL)" \
+			-F "$(synth_list_f)" \
+			-board "$(BOARD)" \
+			-ip-vivado-tcls "$(shell find '$(build_dir)' -name '*.vivado.tcl')"
+
+.PHONY: impress
+impress: $(BIT_FILE_IMPRESS)
+
 .PHONY: debug-bitstream
 debug-bitstream: $(build_dir)/obj/post_synth.dcp
 	cd $(build_dir); vivado \

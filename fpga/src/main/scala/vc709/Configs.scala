@@ -112,6 +112,28 @@ class CGRARocket128VC709Config extends Config (
   new chipyard.RocketConfig
 )
 
+class DPRCGRARocket128VC709Config extends Config (
+  new WithVC709Tweaks ++
+  new chipyard.config.WithSystemBusWidth(128) ++
+  new overlay.DPROverlayConfig ++
+  new overlay.WithOverlayRocc ++
+  new chipyard.RocketConfig
+)
+
+// Minimal configuration to speedup the synthesis
+class MinimalCGRARocket128VC709Config extends Config (
+  new WithVC709Tweaks ++
+  new chipyard.config.WithSystemBusWidth(128) ++
+  new freechips.rocketchip.subsystem.WithL1DCacheSets(16) ++ // 4 KB
+  new freechips.rocketchip.subsystem.WithL1ICacheSets(16) ++ // 4 KB
+  new freechips.rocketchip.subsystem.WithInclusiveCache(nWays=4, capacityKB=128) ++ // 128 KB
+  new overlay.DefaultOverlayConfig ++
+  new overlay.WithOverlayRocc ++
+  new freechips.rocketchip.subsystem.WithRV32 ++
+  new freechips.rocketchip.subsystem.WithNSmallCores(1) ++         // single rocket-core
+  new chipyard.config.AbstractConfig
+)
+
 class CGRARocket256VC709Config extends Config (
   new WithVC709Tweaks ++
   new chipyard.config.WithSystemBusWidth(256) ++

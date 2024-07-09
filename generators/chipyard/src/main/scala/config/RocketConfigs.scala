@@ -12,7 +12,8 @@ class SimCGRAConfig extends Config((site, here, up) => {
   case OverlayKey => OverlayParams(
     cgraLen     = 32,
     inputNodes  = 4,
-    outputNodes = 4
+    outputNodes = 4,
+    dpr         = false
   )
 })
 
